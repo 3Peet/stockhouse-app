@@ -11,7 +11,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,9 +22,12 @@ import {
 	FormItem,
 	FormLabel,
 } from "@/components/ui/form";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-	email: z.string().min(2).max(50),
+	email: z.string().email().min(5),
 	password: z.string().min(2).max(50),
 });
 
@@ -33,6 +35,9 @@ export const description =
 	"A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
 
 export function LoginForm() {
+	const router = useRouter();
+	const { toast } = useToast();
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -41,10 +46,33 @@ export function LoginForm() {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		const { email, password } = values;
+		try {
+			const result = await signIn("credentials", {
+				redirect: false,
+				email,
+				password,
+			});
+
+			if (result?.error) {
+				toast({
+					variant: "destructive",
+					title:
+						result.status === 401
+							? "Email or Password incorrect"
+							: "Uh oh! Something went wrong",
+				});
+			} else {
+				router.push("/profile");
+			}
+		} catch (error) {
+			toast({
+				variant: "destructive",
+				title: "Uh oh! Something went wrong",
+				description: "There was a problem with your request.",
+			});
+		}
 	}
 
 	return (
