@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import type { JWT } from "next-auth/jwt";
 import type { Session, User } from "next-auth";
+import { pages } from "next/dist/build/templates/app-page";
 
 const prisma = new PrismaClient();
 
@@ -55,6 +56,9 @@ export const authOptions = {
 			}
 			return session;
 		},
+	},
+	pages: {
+		signIn: "/login",
 	},
 };
 
