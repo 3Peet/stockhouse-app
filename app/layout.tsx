@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/toaster";
 import SessionProvider from "@/components/session-provider";
 import { getServerSession } from "next-auth";
+import ReactQueryProvider from "@/components/react-query";
 
 import "./globals.css";
 
@@ -34,9 +35,12 @@ export default async function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<SessionProvider session={session}>
-					<main>{children}</main>
-				</SessionProvider>
+				<ReactQueryProvider>
+					<SessionProvider session={session}>
+						<main>{children}</main>
+					</SessionProvider>
+				</ReactQueryProvider>
+
 				<Toaster />
 			</body>
 		</html>

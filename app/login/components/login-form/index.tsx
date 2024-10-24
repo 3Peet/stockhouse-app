@@ -28,7 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
 	email: z.string().email().min(5),
-	password: z.string().min(2).max(50),
+	password: z.string().min(5).max(50),
 });
 
 export const description =
@@ -132,7 +132,7 @@ export function LoginForm() {
 
 				<div className="mt-4 text-center text-sm">
 					Don&apos;t have an account?{" "}
-					<Link href="#" className="underline">
+					<Link href="/sign-up" className="underline">
 						Sign up
 					</Link>
 				</div>
