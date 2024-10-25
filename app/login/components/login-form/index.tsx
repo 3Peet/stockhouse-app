@@ -64,7 +64,7 @@ export function LoginForm() {
 							: "Uh oh! Something went wrong",
 				});
 			} else {
-				router.push("/profile");
+				router.push("/dashboard");
 			}
 		} catch (error) {
 			toast({
